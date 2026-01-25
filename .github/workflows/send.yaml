@@ -1,4 +1,3 @@
-
 name: WhatsApp Automation
 
 on:
@@ -32,8 +31,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
           # add only session + dashboard
           git add session dashboard
           git commit -m "update session & dashboard $(date +%F)" || echo "No changes"
-
           git push
