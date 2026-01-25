@@ -35,4 +35,5 @@ jobs:
           # add only session + dashboard
           git add session dashboard
           git commit -m "update session & dashboard $(date +%F)" || echo "No changes"
+
           git push
