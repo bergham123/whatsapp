@@ -2,6 +2,8 @@ name: WhatsApp Automation
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
 
 permissions:
   contents: write
@@ -32,7 +34,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          # commit only necessary files
           git add session dashboard aggregate.json
           git commit -m "update session, dashboard & aggregate $(date +%F)" || echo "No changes"
           git push
