@@ -12,6 +12,7 @@ const IMAGES_DIR = "./images";
 const DASHBOARD_DIR = "./dashboard";
 const SESSION_DIR = "./session";
 const AGGREGATE_FILE = "./aggregate.json";
+
 const ADMIN_NUMBER = "212642284241@c.us";
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
@@ -30,12 +31,13 @@ if (await fs.pathExists(dashboardPath)) {
   process.exit(0);
 }
 
-// ⛔ التوقيت (UTC)
+// 🕒 التوقيت (المغرب)
 const now = new Date();
-const hour = now.getUTCHours();
+const moroccoHour = (now.getUTCHours() + 1) % 24;
 
-if (hour < 5 || hour >= 6) {
-  console.log("⛔ خارج الوقت المسموح");
+// ⛔ خارج الوقت (06 → 09)
+if (moroccoHour < 6 || moroccoHour >= 9) {
+  console.log("⛔ خارج الوقت (06:00 - 09:00)");
   process.exit(0);
 }
 
@@ -88,10 +90,8 @@ client.on("ready", async () => {
   for (const num of numbers) {
     const chatId = `${num}@c.us`;
 
-    // 🎯 message random
     const message = messages[Math.floor(Math.random() * messages.length)];
 
-    // 📸 image random
     const randomImage = validImages[Math.floor(Math.random() * validImages.length)];
     const imagePath = path.join(IMAGES_DIR, randomImage);
     const media = MessageMedia.fromFilePath(imagePath);
@@ -103,7 +103,7 @@ client.on("ready", async () => {
 
       dashboard.sent.push(num);
       dashboard.total++;
-      console.log(`✔ Sent to ${num} (image: ${randomImage})`);
+      console.log(`✔ Sent to ${num}`);
     } catch (err) {
       dashboard.failed.push(num);
       console.log(`❌ Failed ${num} → ${err.message}`);
@@ -135,9 +135,7 @@ client.on("ready", async () => {
   // 📤 report
   await client.sendMessage(
     ADMIN_NUMBER,
-    `✅ WhatsApp Automation Finished
-📅 Date: ${today}
-📤 Total Sent: ${dashboard.total}`
+    `✅ Finished\n📅 ${today}\n📤 Total: ${dashboard.total}`
   );
 
   process.exit(0);
