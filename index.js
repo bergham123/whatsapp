@@ -36,7 +36,7 @@ const now = new Date();
 const moroccoHour = (now.getUTCHours() + 1) % 24;
 
 // ⛔ خارج الوقت (06 → 09)
-if (moroccoHour < 6 || moroccoHour >= 9) {
+if (moroccoHour < 19 || moroccoHour >= 21) {
   console.log("⛔ خارج الوقت (06:00 - 09:00)");
   process.exit(0);
 }
