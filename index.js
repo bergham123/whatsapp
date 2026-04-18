@@ -32,10 +32,10 @@ if (await fs.pathExists(dashboardPath)) {
 const now = new Date();
 const hour = now.getUTCHours();
 
-if (hour < 5 || hour >= 6) {
-  console.log("⛔ خارج الوقت المسموح (05:00 - 06:00 UTC)");
-  process.exit(0);
-}
+// if (hour < 5 || hour >= 6) {
+//   console.log("⛔ خارج الوقت المسموح (05:00 - 06:00 UTC)");
+//   process.exit(0);
+// }
 
 // 📊 dashboard
 const dashboard = {
