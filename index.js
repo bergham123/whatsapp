@@ -18,17 +18,14 @@ const randomDelay = () => 20000 + Math.floor(Math.random() * 20000);
 await fs.ensureDir(DASHBOARD_DIR);
 await fs.ensureDir(SESSION_DIR);
 
-// 📅 تاريخ اليوم
 const today = new Date().toISOString().split("T")[0];
 const dashboardPath = `${DASHBOARD_DIR}/dashboard-${today}.json`;
 
-// ⛔ منع التكرار
 if (await fs.pathExists(dashboardPath)) {
   console.log("⚠️ Already sent today. Skipping...");
   process.exit(0);
 }
 
-// ⛔ تحقق من الوقت (UTC)
 const now = new Date();
 const hour = now.getUTCHours();
 
@@ -37,7 +34,6 @@ const hour = now.getUTCHours();
 //   process.exit(0);
 // }
 
-// 📊 dashboard
 const dashboard = {
   date: today,
   total: 0,
@@ -45,29 +41,30 @@ const dashboard = {
   failed: []
 };
 
-// 🚀 WhatsApp client
 const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "main",
     dataPath: SESSION_DIR
   }),
   puppeteer: {
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--single-process"
+    ],
     headless: true
   }
 });
 
-// 🔐 QR
 client.on("qr", qr => {
   console.log("🔐 Scan QR:");
   qrcode.generate(qr, { small: true });
 });
 
-// ✅ Ready
 client.on("ready", async () => {
   console.log("✅ WhatsApp Ready");
 
-  // 📥 قراءة البيانات
   if (!await fs.pathExists(ACCOUNTS_FILE)) {
     throw new Error("accounts.json not found!");
   }
@@ -77,8 +74,6 @@ client.on("ready", async () => {
 
   for (const num of numbers) {
     const chatId = `${num}@c.us`;
-
-    // 🎯 message random
     const message = messages[Math.floor(Math.random() * messages.length)];
 
     try {
@@ -96,11 +91,9 @@ client.on("ready", async () => {
     await wait(delay);
   }
 
-  // 💾 save dashboard
   await fs.writeJson(dashboardPath, dashboard, { spaces: 2 });
   console.log("📊 Dashboard saved");
 
-  // 📊 aggregate
   const allDashboards = await fs.readdir(DASHBOARD_DIR);
   const aggregate = [];
 
@@ -114,15 +107,26 @@ client.on("ready", async () => {
   await fs.writeJson(AGGREGATE_FILE, aggregate, { spaces: 2 });
   console.log("📊 Aggregate JSON updated");
 
-  // 📤 تقرير للـ admin
   await client.sendMessage(
     ADMIN_NUMBER,
-    `✅ WhatsApp Automation Finished
-📅 Date: ${today}
-📤 Total Sent: ${dashboard.total}`
+    `✅ WhatsApp Automation Finished\n📅 Date: ${today}\n📤 Total Sent: ${dashboard.total}`
   );
 
   process.exit(0);
 });
+
+// 🔓 Remove stale Chrome profile locks before launching
+const lockFiles = [
+  path.join(SESSION_DIR, "session-main", "SingletonLock"),
+  path.join(SESSION_DIR, "session-main", "SingletonCookie"),
+  path.join(SESSION_DIR, "session-main", "SingletonSocket"),
+];
+
+for (const lockFile of lockFiles) {
+  if (await fs.pathExists(lockFile)) {
+    await fs.remove(lockFile);
+    console.log(`🔓 Removed lock file: ${lockFile}`);
+  }
+}
 
 client.initialize();
