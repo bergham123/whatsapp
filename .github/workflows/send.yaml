@@ -2,8 +2,6 @@ name: WhatsApp Automation
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 20-22 * * *'
 
 permissions:
   contents: write
@@ -15,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -31,7 +31,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-
+          # commit only necessary files
           git add session dashboard aggregate.json
-          git commit -m "update session $(date +%F)" || echo "No changes"
+          git commit -m "update session, dashboard & aggregate $(date +%F)" || echo "No changes"
           git push
