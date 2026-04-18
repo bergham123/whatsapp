@@ -141,4 +141,20 @@ client.on("ready", async () => {
   process.exit(0);
 });
 
+// 🔓 Remove stale Chromium lock files (fixes GitHub Actions profile lock error)
+const profileBase = path.join(SESSION_DIR, "session-main", "Default");
+const lockFiles = [
+  path.join(SESSION_DIR, "session-main", "SingletonLock"),
+  path.join(SESSION_DIR, "session-main", "SingletonCookie"),
+  path.join(SESSION_DIR, "session-main", "SingletonSocket"),
+  path.join(profileBase, "LOCK"),
+  path.join(profileBase, "lockfile"),
+];
+for (const lockFile of lockFiles) {
+  if (await fs.pathExists(lockFile)) {
+    await fs.remove(lockFile);
+    console.log(`🔓 Removed lock file: ${lockFile}`);
+  }
+}
+
 client.initialize();
