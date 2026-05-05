@@ -1,10 +1,10 @@
-const os = require('os');
+import os from 'os';
 
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
   
   for (const interfaceName in interfaces) {
-    const networkInterface = interfaces[interfaceName];  // Changed from 'interface'
+    const networkInterface = interfaces[interfaceName];  // Changed variable name
     
     for (const iface of networkInterface) {
       // Filter for IPv4, non-internal (not localhost)
