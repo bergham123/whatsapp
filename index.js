@@ -48,6 +48,17 @@ client.on("qr", qr => {
 client.on("ready", async () => {
   console.log("✅ WhatsApp Ready");
 
+  const hour = new Date().getUTCHours();
+
+    // if (hour < 6 || hour > 7) {
+    //   console.log("⛔ خارج وقت الإرسال");
+    //   process.exit(0);
+    // }
+
+    if (hour < 16 || hour > 17) {
+      console.log("⛔ خارج وقت الإرسال");
+      process.exit(0);
+    }
   // Read accounts and message
   if (!await fs.pathExists(ACCOUNTS_FILE)) {
     throw new Error("accounts.json not found!");
