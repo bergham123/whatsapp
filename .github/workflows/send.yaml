@@ -1,8 +1,7 @@
 name: WhatsApp Automation
 
 on:
-  schedule:
-    - cron: '0 16 * * *'   # 06:00 UTC = 07:00 Morocco
+  
   workflow_dispatch:      # for manual test
 
 permissions:
