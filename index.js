@@ -48,7 +48,7 @@ client.on("qr", qr => {
 client.on("ready", async () => {
   console.log("✅ WhatsApp Ready");
 
-  const hour = new Date().getUTCHours();
+  // const hour = new Date().getUTCHours();
 
     // if (hour < 6 || hour > 7) {
     //   console.log("⛔ خارج وقت الإرسال");
