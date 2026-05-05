@@ -1,0 +1,22 @@
+name: Get Machine IP Address
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  get-ip:
+    runs-on: ubuntu-latest  # or windows-latest, macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run IP detection script
+        run: node get-ip.js
