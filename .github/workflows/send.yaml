@@ -1,7 +1,7 @@
 name: WhatsApp Automation
 
 on:
-  workflow_dispatch:      # تشغيل يدوي فقط
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -32,10 +32,11 @@ jobs:
       - name: Run WhatsApp bot
         run: npm start
 
-      - name: Commit updated files (session, dashboard, aggregate, checkpoint, logs)
+      - name: Commit updated files
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add session dashboard aggregate.json checkpoint.json logs
+          # نضيف فقط الملفات الموجودة (نتجاهل الأخطاء)
+          git add --ignore-errors session dashboard aggregate.json logs
           git commit -m "update session, dashboard & logs $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
           git push
