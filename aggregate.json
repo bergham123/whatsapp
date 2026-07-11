@@ -1,10 +1,22 @@
 [
   {
     "date": "2026-04-12",
-    "total": 5
+    "attempted": 0,
+    "success": 0,
+    "failed": [
+      "212655068239"
+    ]
   },
   {
     "date": "2026-04-13",
-    "total": 7
+    "attempted": 0,
+    "success": 0,
+    "failed": []
+  },
+  {
+    "date": "2026-07-11",
+    "attempted": 7,
+    "success": 7,
+    "failed": 0
   }
 ]

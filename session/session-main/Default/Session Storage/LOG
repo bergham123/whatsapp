@@ -1,2 +1,3 @@
-2026/07/11-18:33:23.160 952 Creating DB /home/runner/work/whatsapp/whatsapp/session/session-main/Default/Session Storage since it was missing.
-2026/07/11-18:33:23.167 952 Reusing MANIFEST /home/runner/work/whatsapp/whatsapp/session/session-main/Default/Session Storage/MANIFEST-000001
+2026/07/11-19:45:04.590 b2c Reusing MANIFEST /home/runner/work/whatsapp/whatsapp/session/session-main/Default/Session Storage/MANIFEST-000001
+2026/07/11-19:45:04.591 b2c Recovering log #3
+2026/07/11-19:45:04.591 b2c Reusing old log /home/runner/work/whatsapp/whatsapp/session/session-main/Default/Session Storage/000003.log 
