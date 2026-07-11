@@ -1,8 +1,7 @@
 name: WhatsApp Automation
 
 on:
-  
-  workflow_dispatch:      # for manual test
+  workflow_dispatch:      # تشغيل يدوي فقط
 
 permissions:
   contents: write
@@ -22,17 +21,21 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev
+
+      - name: Install Node dependencies
         run: npm install
 
       - name: Run WhatsApp bot
         run: npm start
 
-      - name: Commit session, dashboard & aggregate
+      - name: Commit updated files (session, dashboard, aggregate, checkpoint, logs)
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          # commit only necessary files
-          git add session dashboard aggregate.json
-          git commit -m "update session, dashboard & aggregate $(date +%F)" || echo "No changes"
+          git add session dashboard aggregate.json checkpoint.json logs
+          git commit -m "update session, dashboard & logs $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
           git push
