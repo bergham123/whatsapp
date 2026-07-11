@@ -18,23 +18,18 @@ const CHECKPOINT_FILE = "./checkpoint.json";
 const AGGREGATE_FILE = "./aggregate.json";
 const ADMIN_NUMBER = "212642284241@c.us";
 
-const MAX_RETRIES = 2;                // عدد محاولات إعادة الإرسال عند الفشل
-const RETRY_DELAY = 5000;             // 5 ثوانٍ بين المحاولات
-const MIN_DELAY = 20000;              // 20 ثانية
-const MAX_DELAY = 40000;              // 40 ثانية
+const MAX_RETRIES = 2;
+const RETRY_DELAY = 5000;
+const MIN_DELAY = 20000;
+const MAX_DELAY = 40000;
 
 // =================== أدوات مساعدة ===================
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const randomDelay = () => MIN_DELAY + Math.floor(Math.random() * (MAX_DELAY - MIN_DELAY));
 
-// تنظيف الرقم: إزالة كل ما ليس رقماً، ثم التأكد من وجود رمز الدولة (يفترض 212)
-const cleanNumber = (raw) => {
-  let num = raw.replace(/\D/g, "");
-  if (!num.startsWith("212")) num = "212" + num; // إضافة رمز المغرب افتراضياً
-  return num;
-};
+// تنظيف الرقم: إزالة كل ما ليس رقماً (يحتفظ برمز الدولة)
+const cleanNumber = (raw) => raw.replace(/\D/g, "");
 
-// الحصول على وقت اليوم بصيغة قابلة للقراءة
 const getTimeStr = () => new Date().toLocaleTimeString("fr-FR", { hour12: false });
 
 // =================== تهيئة المجلدات ===================
@@ -46,7 +41,7 @@ const today = new Date().toISOString().split("T")[0];
 const dashboardPath = path.join(DASHBOARD_DIR, `dashboard-${today}.json`);
 const logPath = path.join(LOGS_DIR, `${today}.log`);
 
-// كائن الـ Dashboard اليومي (سيتم تحميله أو إنشاؤه)
+// كائن الـ Dashboard مع قيم افتراضية
 let dashboard = {
   date: today,
   attempted: 0,
@@ -56,13 +51,21 @@ let dashboard = {
   failedList: [],
 };
 
-// =================== تحميل الـ Dashboard الموجود (إن وجد) ===================
+// تحميل الملف إن وجد، مع دمج القيم الافتراضية
 if (await fs.pathExists(dashboardPath)) {
-  dashboard = await fs.readJson(dashboardPath);
-  console.log(`📂 تم تحميل dashboard اليومي (${dashboard.success} نجاح، ${dashboard.failed} فشل)`);
+  try {
+    const loaded = await fs.readJson(dashboardPath);
+    dashboard = { ...dashboard, ...loaded };
+    // التأكد من أن الحقول المصفوفية موجودة
+    if (!Array.isArray(dashboard.sent)) dashboard.sent = [];
+    if (!Array.isArray(dashboard.failedList)) dashboard.failedList = [];
+    console.log(`📂 تم تحميل dashboard اليومي (${dashboard.success} نجاح، ${dashboard.failed} فشل)`);
+  } catch (err) {
+    console.warn(`⚠️ فشل تحميل dashboard، سنستخدم القيم الافتراضية: ${err.message}`);
+  }
 }
 
-// =================== إعداد الـ Logger (يسجل في ملف وفي الكونسول) ===================
+// =================== إعداد الـ Logger ===================
 const logStream = fs.createWriteStream(logPath, { flags: "a" });
 function logMessage(msg) {
   const timestamp = new Date().toISOString();
@@ -73,11 +76,15 @@ function logMessage(msg) {
 
 logMessage("🚀 بدء تشغيل السكربت");
 
-// =================== إدارة نقطة التوقف (Checkpoint) ===================
-let checkpoint = { lastIndex: 0 }; // الفهرس الذي تم إرساله آخر مرة (قبل الأخير)
+// =================== إدارة نقطة التوقف ===================
+let checkpoint = { lastIndex: 0 };
 if (await fs.pathExists(CHECKPOINT_FILE)) {
-  checkpoint = await fs.readJson(CHECKPOINT_FILE);
-  // التأكد من أن lastIndex لا يتجاوز قائمة الأرقام الحالية (سيتم التحقق لاحقاً)
+  try {
+    checkpoint = await fs.readJson(CHECKPOINT_FILE);
+    if (typeof checkpoint.lastIndex !== "number") checkpoint.lastIndex = 0;
+  } catch {
+    checkpoint.lastIndex = 0;
+  }
 }
 logMessage(`📌 نقطة التوقف الحالية: الفهرس ${checkpoint.lastIndex}`);
 
@@ -130,12 +137,10 @@ client.on("ready", async () => {
 
   // ========== تحديد نقطة البداية ==========
   let startIndex = 0;
-  // إذا كان checkpoint.lastIndex يشير إلى رقم موجود، نبدأ من التالي
   if (checkpoint.lastIndex < cleanNumbers.length) {
     startIndex = checkpoint.lastIndex;
     logMessage(`⏩ الاستئناف من الفهرس ${startIndex} (الرقم: ${cleanNumbers[startIndex]})`);
   } else {
-    // إذا كان الفهرس أكبر من القائمة، نبدأ من الصفر (ربما تغيرت القائمة)
     startIndex = 0;
     logMessage(`🔄 بدء من البداية (الفهرس ${startIndex})`);
   }
@@ -147,41 +152,38 @@ client.on("ready", async () => {
   while (index < totalAttempts) {
     const rawNumber = cleanNumbers[index];
     const chatId = `${rawNumber}@c.us`;
-    let success = false;
-    let attempts = 0;
 
-    // التحقق مما إذا كان الرقم قد أرسل اليوم (من dashboard الحالي)
+    // التحقق مما إذا كان الرقم قد أرسل اليوم
     if (dashboard.sent.includes(rawNumber) || dashboard.failedList.includes(rawNumber)) {
       logMessage(`⏭️ الرقم ${rawNumber} سبق معالجته اليوم، تخطي`);
       index++;
       continue;
     }
 
-    // محاولة الإرسال مع إعادة المحاولة
+    let success = false;
+    let attempts = 0;
+
     while (attempts <= MAX_RETRIES && !success) {
       try {
-        // 1- التحقق من صحة الرقم على واتساب
+        // التحقق من وجود الرقم على واتساب
         const numberId = await client.getNumberId(chatId);
         if (!numberId) {
           logMessage(`⚠️ الرقم ${rawNumber} غير موجود على واتساب`);
           break; // لا فائدة من إعادة المحاولة
         }
 
-        // 2- الإرسال
+        // الإرسال
         await client.sendMessage(chatId, message);
         success = true;
 
-        // تحديث dashboard
         dashboard.attempted++;
         dashboard.success++;
         dashboard.sent.push(rawNumber);
         logMessage(`✔ تم الإرسال إلى ${rawNumber}`);
 
-        // حفظ نقطة التقدم بعد النجاح (الفهرس التالي)
+        // حفظ التقدم
         checkpoint.lastIndex = index + 1;
         await fs.writeJson(CHECKPOINT_FILE, checkpoint, { spaces: 2 });
-
-        // حفظ dashboard بعد كل إرسال ناجح (للتحديث المستمر)
         await fs.writeJson(dashboardPath, dashboard, { spaces: 2 });
 
       } catch (err) {
@@ -190,18 +192,16 @@ client.on("ready", async () => {
           logMessage(`🔁 محاولة ${attempts}/${MAX_RETRIES} للرقم ${rawNumber} فشلت: ${err.message}`);
           await wait(RETRY_DELAY);
         } else {
-          // فشل بعد كل المحاولات
           dashboard.attempted++;
           dashboard.failed++;
           dashboard.failedList.push(rawNumber);
           logMessage(`❌ فشل نهائي للرقم ${rawNumber}: ${err.message}`);
-          // حفظ dashboard بعد الفشل
           await fs.writeJson(dashboardPath, dashboard, { spaces: 2 });
         }
       }
     }
 
-    // التأخير بين الرسائل (بغض النظر عن النجاح أو الفشل)
+    // التأخير بين الرسائل
     const delay = randomDelay();
     logMessage(`⏳ انتظار ${(delay / 1000).toFixed(1)} ثانية`);
     await wait(delay);
@@ -212,7 +212,7 @@ client.on("ready", async () => {
   // ========== انتهى الإرسال ==========
   logMessage("🏁 انتهت الحلقة الرئيسية");
 
-  // حذف ملف checkpoint بعد الانتهاء (اختياري)
+  // حذف checkpoint بعد الانتهاء
   await fs.remove(CHECKPOINT_FILE).catch(() => {});
 
   // ========== تحديث الـ Aggregate ==========
@@ -237,16 +237,14 @@ client.on("ready", async () => {
   }
 
   // ========== إرسال التقرير النهائي للإدمن ==========
-  const duration = new Date() - new Date(); // يمكن حساب المدة الحقيقية، لكننا لن نحتفظ بوقت البدء هنا
   const report = `
 ✅ تقرير الإرسال
 📅 التاريخ: ${today}
 📤 المحاولات: ${dashboard.attempted}
 ✔ النجاح: ${dashboard.success}
 ❌ الفشل: ${dashboard.failed}
-⏱️ المدة: (غير محسوبة) 
-📌 الرسائل المرسلة: ${dashboard.sent.length}
-❌ الأرقام الفاشلة: ${dashboard.failedList.join(", ") || "لا يوجد"}
+📌 المرسلة: ${dashboard.sent.length} رقم
+❌ الفاشلة: ${dashboard.failedList.join(", ") || "لا يوجد"}
 `;
 
   try {
@@ -269,7 +267,6 @@ client.on("disconnected", (reason) => {
 // =================== تشغيل العميل ===================
 client.initialize();
 
-// عرض الوقت الحالي
 const now = new Date();
 const hours = now.getHours().toString().padStart(2, "0");
 const minutes = now.getMinutes().toString().padStart(2, "0");
