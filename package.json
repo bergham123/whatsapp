@@ -10,6 +10,7 @@
     "qrcode-terminal": "^0.12.0",
     "fs-extra": "^11.2.0",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2"
   }
 }
