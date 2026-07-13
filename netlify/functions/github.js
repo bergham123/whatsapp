@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 const TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = process.env.OWNER;
 const REPO = process.env.REPO;
@@ -110,7 +108,6 @@ export async function getUsers() {
         const file = await getFile("users.json");
         return file.data;
     } catch (error) {
-        // If users.json doesn't exist, return empty array
         if (error.message.includes("Cannot read")) {
             return [];
         }
