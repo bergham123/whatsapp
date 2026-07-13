@@ -1,18 +1,13 @@
-2026/07/13-22:07:35.129 b49 Reusing MANIFEST /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2026/07/13-22:07:35.130 b49 Recovering log #321
-2026/07/13-22:07:35.182 b49 Reusing old log /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000321.log 
-2026/07/13-22:07:38.837 b47 Level-0 table #334: started
-2026/07/13-22:07:38.861 b47 Level-0 table #334: 1312977 bytes OK
-2026/07/13-22:07:38.862 b47 Delete type=0 #321
-2026/07/13-22:07:39.298 b4e Compacting 1@1 + 9@2 files
-2026/07/13-22:07:39.419 b4e Generated table #335@1: 73289 keys, 2301052 bytes
-2026/07/13-22:07:39.477 b4e Generated table #336@1: 11911 keys, 2157740 bytes
-2026/07/13-22:07:39.506 b4e Generated table #337@1: 1874 keys, 2145652 bytes
-2026/07/13-22:07:39.550 b4e Generated table #338@1: 2342 keys, 2149288 bytes
-2026/07/13-22:07:39.903 b4e Generated table #339@1: 20292 keys, 2218074 bytes
-2026/07/13-22:07:40.093 b4e Generated table #340@1: 22462 keys, 2241623 bytes
-2026/07/13-22:07:40.143 b4e Generated table #341@1: 11795 keys, 2140742 bytes
-2026/07/13-22:07:40.184 b4e Generated table #342@1: 83593 keys, 2228778 bytes
-2026/07/13-22:07:40.196 b4e Generated table #343@1: 9003 keys, 388475 bytes
-2026/07/13-22:07:40.196 b4e Compacted 1@1 + 9@2 files => 17971424 bytes
-2026/07/13-22:07:40.198 b4e compacted to: files[ 0 0 9 0 0 0 0 ]
+2026/07/13-22:12:31.124 de6 Reusing MANIFEST /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/07/13-22:12:31.125 de6 Recovering log #333
+2026/07/13-22:12:31.131 de6 Reusing old log /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000333.log 
+2026/07/13-22:12:31.132 de6 Delete type=2 #329
+2026/07/13-22:12:31.132 de6 Delete type=2 #330
+2026/07/13-22:12:31.132 de6 Delete type=2 #325
+2026/07/13-22:12:31.132 de6 Delete type=2 #326
+2026/07/13-22:12:31.132 de6 Delete type=2 #331
+2026/07/13-22:12:31.132 de6 Delete type=2 #323
+2026/07/13-22:12:31.132 de6 Delete type=2 #334
+2026/07/13-22:12:31.132 de6 Delete type=2 #327
+2026/07/13-22:12:31.132 de6 Delete type=2 #324
+2026/07/13-22:12:31.132 de6 Delete type=2 #328
