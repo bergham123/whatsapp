@@ -31,6 +31,31 @@
                 <button id="logout">Logout</button>
             </header>
 
+            <!-- قسم رفع الصور -->
+<section class="card">
+    <div class="card-header">
+        <h2>🖼️ Upload Image</h2>
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="file" id="imageInput" accept="image/*" style="flex:1; padding:10px; background:#1e293b; border:1px solid #1f2937; border-radius:8px; color:white;" />
+        <button id="uploadImageBtn" style="background:#2563eb; border:none; padding:10px 20px; border-radius:8px; color:white;">Upload</button>
+    </div>
+    <div id="uploadResult" style="margin-top:12px; color:#94a3b8;"></div>
+</section>
+
+<!-- قسم تحديد الوقت -->
+<section class="card">
+    <div class="card-header">
+        <h2>⏰ Schedule Daily Run</h2>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <input type="time" id="scheduleTime" style="padding:10px; background:#1e293b; border:1px solid #1f2937; border-radius:8px; color:white;" />
+        <button id="setScheduleBtn" style="background:#16a34a; border:none; padding:10px 20px; border-radius:8px; color:white;">Save Schedule</button>
+        <button id="loadScheduleBtn" style="background:#475569; border:none; padding:10px 20px; border-radius:8px; color:white;">Load Schedule</button>
+    </div>
+    <div id="scheduleStatus" style="margin-top:12px; color:#94a3b8;"></div>
+</section>
+            
             <section class="card">
                 <div class="card-header">
                     <h2>📞 Accounts</h2>
