@@ -122,3 +122,45 @@ export async function saveUsers(users) {
         "Update users"
     );
 }
+
+// ----------------------------------
+//  upload iamges 
+// ---------------------------
+export async function uploadFileRaw(path, contentBase64, message = "Upload file") {
+    const TOKEN = process.env.GITHUB_TOKEN;
+    const OWNER = process.env.OWNER;
+    const REPO = process.env.REPO;
+    const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
+
+    let sha = null;
+    try {
+        const res = await fetch(`${API}/contents/${path}`, {
+            headers: { Authorization: `Bearer ${TOKEN}` }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            sha = data.sha;
+        }
+    } catch (e) {}
+
+    const body = {
+        message,
+        content: contentBase64,
+        ...(sha && { sha })
+    };
+
+    const res = await fetch(`${API}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err);
+    }
+    return await res.json();
+}
