@@ -1,13 +1,28 @@
-2026/07/13-22:12:31.124 de6 Reusing MANIFEST /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2026/07/13-22:12:31.125 de6 Recovering log #333
-2026/07/13-22:12:31.131 de6 Reusing old log /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000333.log 
-2026/07/13-22:12:31.132 de6 Delete type=2 #329
-2026/07/13-22:12:31.132 de6 Delete type=2 #330
-2026/07/13-22:12:31.132 de6 Delete type=2 #325
-2026/07/13-22:12:31.132 de6 Delete type=2 #326
-2026/07/13-22:12:31.132 de6 Delete type=2 #331
-2026/07/13-22:12:31.132 de6 Delete type=2 #323
-2026/07/13-22:12:31.132 de6 Delete type=2 #334
-2026/07/13-22:12:31.132 de6 Delete type=2 #327
-2026/07/13-22:12:31.132 de6 Delete type=2 #324
-2026/07/13-22:12:31.132 de6 Delete type=2 #328
+2026/07/14-08:38:23.068 a76 Reusing MANIFEST /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/07/14-08:38:23.068 a76 Recovering log #333
+2026/07/14-08:38:23.083 a76 Reusing old log /home/runner/work/whatsapp/whatsapp/session/session-main/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000333.log 
+2026/07/14-08:38:30.874 a79 Level-0 table #346: started
+2026/07/14-08:38:30.897 a79 Level-0 table #346: 1348618 bytes OK
+2026/07/14-08:38:30.898 a79 Delete type=0 #333
+2026/07/14-08:38:30.905 a79 Compacting 1@1 + 9@2 files
+2026/07/14-08:38:31.639 a79 Generated table #347@1: 73376 keys, 2307839 bytes
+2026/07/14-08:38:31.680 a79 Generated table #348@1: 11829 keys, 2159138 bytes
+2026/07/14-08:38:31.706 a79 Generated table #349@1: 1889 keys, 2145241 bytes
+2026/07/14-08:38:31.732 a79 Generated table #350@1: 2312 keys, 2149884 bytes
+2026/07/14-08:38:31.779 a79 Generated table #351@1: 19824 keys, 2214827 bytes
+2026/07/14-08:38:31.908 a79 Generated table #352@1: 22604 keys, 2243454 bytes
+2026/07/14-08:38:32.038 a79 Generated table #353@1: 12641 keys, 2151216 bytes
+2026/07/14-08:38:32.165 a79 Generated table #354@1: 80114 keys, 2224050 bytes
+2026/07/14-08:38:32.174 a79 Generated table #355@1: 12952 keys, 494107 bytes
+2026/07/14-08:38:32.174 a79 Compacted 1@1 + 9@2 files => 18089756 bytes
+2026/07/14-08:38:32.174 a79 compacted to: files[ 0 0 9 0 0 0 0 ]
+2026/07/14-08:38:32.175 a79 Delete type=2 #337
+2026/07/14-08:38:32.175 a79 Delete type=2 #343
+2026/07/14-08:38:32.175 a79 Delete type=2 #336
+2026/07/14-08:38:32.175 a79 Delete type=2 #341
+2026/07/14-08:38:32.175 a79 Delete type=2 #346
+2026/07/14-08:38:32.175 a79 Delete type=2 #335
+2026/07/14-08:38:32.175 a79 Delete type=2 #339
+2026/07/14-08:38:32.175 a79 Delete type=2 #342
+2026/07/14-08:38:32.175 a79 Delete type=2 #340
+2026/07/14-08:38:32.175 a79 Delete type=2 #338
